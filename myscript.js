@@ -1,25 +1,36 @@
-// find the longest common substring
-function lcs(lcstest, lcstarget) {
- matchfound = 0
- lsclen = lcstest.length
-  for(lcsi=0; lcsi<lcstest.length; lcsi++){
-   lscos=0
-    for(lcsj=0; lcsj<lcsi+1; lcsj++){
-     re = new RegExp("(?:.{" + lscos + "})(.{" + lsclen + "})", "i");
-     temp = re.test(lcstest);
-     re = new RegExp("(" + RegExp.$1 + ")", "i");
-      if(re.test(lcstarget)){
-       matchfound=1;
-       result = RegExp.$1;
-       break;
-       }
-     lscos = lscos + 1;
-     }
-     if(matchfound==1){return result; break;}
-    lsclen = lsclen - 1;
-   }
-  result = "";
-  return result;
+function lcs(string1, string2){
+	// init max value
+	var longestCommonSubstring = 0;
+	// init 2D array with 0
+	var table = [],
+            len1 = string1.length,
+            len2 = string2.length,
+            row, col;
+	for(row = 0; row <= len1; row++){
+		table[row] = [];
+		for(col = 0; col <= len2; col++){
+			table[row][col] = 0;
+		}
+	}
+	// fill table
+        var i, j;
+	for(i = 0; i < len1; i++){
+		for(j = 0; j < len2; j++){
+			if(string1[i]==string2[j]){
+				if(table[i][j] == 0){
+					table[i+1][j+1] = 1;
+				} else {
+					table[i+1][j+1] = table[i][j] + 1;
+				}
+				if(table[i+1][j+1] > longestCommonSubstring){
+					longestCommonSubstring = table[i+1][j+1];
+				}
+			} else {
+				table[i+1][j+1] = 0;
+			}
+		}
+	}
+	return longestCommonSubstring;
 }
 
 // grab the url from the first image
@@ -33,12 +44,19 @@ function swap_link_for_image($link, $image){
 	$link.removeAttr("title");
 }
 
+
+var storage = {};
 function swap_images_for_link(){
-	console.log('trying to swap images for link........');
 	$('.replacement-container').each(function(){
+
+		// put this away for later in case user toggles back on
+		var $parent = $(this).parent();
+		var key = $parent.attr('href') + $parent.attr('title');
+		storage[key] = $(this);
+
 		var text = $(this).find('.replacement-label').text();
-		console.log('text ' + text);
-		$(this).parent().text(text);
+		$parent.text(text);
+
 		$(this).attr('title', $(this).data('title'));
 	});
 }
@@ -66,15 +84,23 @@ function is_link_we_want_to_replace(ind, elt){
 	return $elt.hasAttr('title');
 }
 
-function clean_token(token){
-	if (token.indexOf('(') > -1 && token.indexOf(')') > -1){
-		token =  token.slice(0, token.indexOf('(')) + token.slice(token.indexOf(')')+1, token.length);
-	}
 
-	return token.toLowerCase();
-}
 function get_image($link){
 	function pick_image(pages){
+		function clean_token(token){
+			if (token.indexOf('(') > -1 && token.indexOf(')') > -1){
+				// remove the stuff in parentheses
+				token =  token.slice(0, token.indexOf('(')) + token.slice(token.indexOf(')')+1, token.length);
+			}
+
+			// if a link is formatted as something#some.... just return some
+			if (token.indexOf('#') > -1){
+				token = token.slice(token.indexOf('#')+1, token.length);
+			}
+
+			return token.toLowerCase();
+		}
+
 		var titles = [];
 		for (var page in pages){
 			titles.push(pages[page].title);
@@ -82,12 +108,13 @@ function get_image($link){
 
 		// try to pick the image based on the biggest substring match
 		var token = clean_token(get_token($link)); 
+
 		var matches = titles.map(function(title){
 			if (title == "File:Commons-logo.svg" || title == 'File:Question book-new.svg'){
 				return [-1, -100, title];
 			}
 
-			return [lcs(title.toLowerCase(), token).length, -title.length, title]; //title.length for tie breaking
+			return [lcs(title.toLowerCase(), token), -title.length, title]; //title.length for tie breaking
 		});
 
 		matches = matches.sort(function (a, b){
@@ -152,10 +179,15 @@ function get_image($link){
 
 	function get_api_link($link){
 		return 'http://en.wikipedia.org/w/api.php?format=json&action=query&generator=images&titles=' + get_token($link);		
+//		return 'http://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&titles=&pithumbsize=200' + get_token($link); //&pithumbsize=100;
 	}
 
 	// get the image files listed on the api link for the webpage
 	$.getJSON(get_api_link($link), function(data){
+
+		// if (get_token($link) == 'Beta_distribution'){
+		// 	debugger;
+		// }
 
 		// move link from spawned to returned
 		spawned.splice($link[0], 1);
@@ -167,6 +199,7 @@ function get_image($link){
 				return;
 			}
 		}catch(e){
+			console.log(e);
 			return;
 		}
 
@@ -245,17 +278,30 @@ var max_spawns = 20;
 
 function convert_to_pictures(){
 
-	chrome.storage.local.get('isExtensionOn', function(items) {
-		console.log('items.isExtensionOn ' + items.isExtensionOn + '...............');
-		if (!items.isExtensionOn){
-			return;
+	chrome.storage.sync.get('isExtensionOn', function(items) {
+		if ((typeof items == 'undefined') || items.isExtensionOn){
+			convert_to_pictures_helper();
 		}
-		convert_to_pictures_helper();
 	});
 }
-function convert_to_pictures_helper(){
-	var $links = $('#bodyContent a').filter(is_link_we_want_to_replace);
 
+function isEmpty(object) { for(var i in object) { return true; } return false; }
+
+function convert_to_pictures_helper(){
+	var $links = $('#bodyContent a');
+
+	// warning: this might be bad performance?
+	// maybe we could fix the is_link_we_want_to replace?
+	$links.each(function(ind, elt){
+		var key = $(elt).attr('href') + $(elt).attr('title');
+		if (key in storage){
+			// it has been stored away
+			$(elt).html(storage[key]);
+			return;
+		}		
+	});		
+
+	$links = $links.filter(is_link_we_want_to_replace);
 	$links.each(function(ind, elt){
 		if (returned.indexOf(elt) > -1 || spawned.indexOf(elt) > -1){
 			// it is queued, do not call it again
