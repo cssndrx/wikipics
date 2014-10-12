@@ -1,12 +1,29 @@
 <!doctype html>
 <html>
    <head>
-
     <style type="text/css">
-        body {
-            width: 200px;
-            height: 200px;
-        }
+
+
+    section{
+        color: #4f4e4e;
+        text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+background-color: #f8f8f8;
+padding: 20px;
+    }
+
+   header{
+       background: linear-gradient(to bottom,#1eb0e9 0,#109adc 100%);
+   }
+   .header-animated{
+    transition: all .4s ease;
+    -webkit-transition: all .4s ease;
+   }
+
+    body {
+        width: 300px;
+        height: 200px;
+        font: 14px "OpenSansLight",Arial,sans-serif;
+    }
 
 
     .onoffswitch {
@@ -56,27 +73,42 @@
         right: 0px; 
     }
 
+    .symbol{
+        max-height: 100px;
+        max-width: 100px;
+    }
+
     </style>
    </head>
    <body>
 
-    <img src="wikipedia-favicon.png">
+   <header>
+    <img src="wikipedia-favicon.png" height="50px">
+    Pictorial Wikipedia
+   </header>
 
-    <p class="off">
-    You have disabled the plugin. Your Wikipedia pages will display normally until you re-enable it (using the toggle switch).
-    </p>
 
-    <p class="on">
-    Your Wikipedia pages will be visual. Happy browsing!
-    </p>    
+    <section>
+        <p class="off">
+        You have disabled the plugin. Your Wikipedia pages will display normally until you re-enable it (using the toggle switch).
+        </p>
 
-    <div class="onoffswitch">
-        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-        <label class="onoffswitch-label" for="myonoffswitch">
-            <span class="onoffswitch-inner"></span>
-            <span class="onoffswitch-switch"></span>
-        </label>
-    </div>
+        <p class="on">
+        Your <img class="symbol" src="wikipedia.png"> <img class="symbol" src="pages.png"> will be <img class="symbol" src="visual.png">. 
+        </p>    
+    </section>
+
+
+    <section>
+        <a href="">About</a>
+        <div class="onoffswitch" style="display:inline-block;">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+            <label class="onoffswitch-label" for="myonoffswitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+        </div>
+    </section>
 
    </body>
   </html>
