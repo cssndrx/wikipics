@@ -1,7 +1,7 @@
 function turning_on(){
   $('.off').hide();
   $('.on').show();
-  $('input').prop('checked', true);
+  // $('input').prop('checked', true);
 
   chrome.storage.sync.set({'isExtensionOn': true}, function() {});
   chrome.tabs.executeScript(null,
@@ -16,7 +16,7 @@ function turning_on(){
 function turning_off(){
   $('.off').show();
   $('.on').hide();
-  $('input').prop('checked', false);
+  // $('input').prop('checked', false);
 
   chrome.storage.sync.set({'isExtensionOn': false}, function() {});
   chrome.tabs.executeScript(null,
@@ -35,29 +35,36 @@ chrome.storage.sync.get('isExtensionOn', function (items){
   }
 });
 
-function apply_transition(sel){
-  $(sel).css({
-                    '-webkit-transition': 'margin 0.3s ease-in 0s',
-                    'transition': 'margin 0.3s ease-in 0s',
-            });
-}
-function remove_transition(sel){
-  $(sel).css({'-webkit-transition': '',
-                      'transition': ''});  
-}
+// function apply_transition(sel){
+//   $(sel).css({
+//                     '-webkit-transition': 'margin 0.3s ease-in 0s',
+//                     'transition': 'margin 0.3s ease-in 0s',
+//             });
+// }
+// function remove_transition(sel){
+//   $(sel).css({'-webkit-transition': '',
+//                       'transition': ''});  
+// }
 
-$('#myonoffswitch').click(function(){
-    apply_transition('.onoffswitch-inner');
-    apply_transition('.onoffswitch-switch');
+// $('#myonoffswitch').click(function(){
+//     apply_transition('.onoffswitch-inner');
+//     apply_transition('.onoffswitch-switch');
 
-    if ($(this).is(':checked')){
-        turning_on();
-    }else{
-      turning_off();
-    }
+//     if ($(this).is(':checked')){
+//         turning_on();
+//     }else{
+//       turning_off();
+//     }
 
-    remove_transition('.onoffswitch-inner');
-    remove_transition('.onoffswitch-switch');
+//     remove_transition('.onoffswitch-inner');
+//     remove_transition('.onoffswitch-switch');
 
+// });
+
+$('.on').click(function(){
+  turning_off();
 });
 
+$('.off').click(function(){
+  turning_on();
+});

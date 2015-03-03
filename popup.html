@@ -3,112 +3,55 @@
    <head>
     <style type="text/css">
 
-
-    section{
-        color: #4f4e4e;
-        text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-background-color: #f8f8f8;
-padding: 20px;
-    }
-
    header{
-       background: linear-gradient(to bottom,#1eb0e9 0,#109adc 100%);
-   }
-   .header-animated{
-    transition: all .4s ease;
-    -webkit-transition: all .4s ease;
+       background-color: #ECECEC;
    }
 
     body {
-        width: 300px;
-        height: 200px;
+        min-width: 250px;
+        min-height: 100px;
         font: 14px "OpenSansLight",Arial,sans-serif;
     }
 
-
-    .onoffswitch {
-        position: relative; width: 90px;
-        -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
-    }
-    .onoffswitch-checkbox {
-        display: none;
-    }
-    .onoffswitch-label {
-        display: block; overflow: hidden; cursor: pointer;
-        border: 2px solid #999999; border-radius: 20px;
-    }
-    .onoffswitch-inner {
-        display: block; width: 200%; margin-left: -100%;
-  /*      -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
-        -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;*/
-    }
-    .onoffswitch-inner:before, .onoffswitch-inner:after {
-        display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
-        font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
-        -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
-    }
-    .onoffswitch-inner:before {
-        content: "ON";
-        padding-left: 10px;
-        background-color: #34A7C1; color: #FFFFFF;
-    }
-    .onoffswitch-inner:after {
-        content: "OFF";
-        padding-right: 10px;
-        background-color: #EEEEEE; color: #999999;
-        text-align: right;
-    }
-    .onoffswitch-switch {
-        display: block; width: 18px; margin: 6px;
-        background: #FFFFFF;
-        border: 2px solid #999999; border-radius: 20px;
-        position: absolute; top: 0; bottom: 0; right: 56px;
-/*        -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
-        -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
-*/    }
-    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
-        margin-left: 0;
-    }
-    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-        right: 0px; 
+    h2{
+        display:inline-block; 
+        font-weight:100; 
+        letter-spacing: 2.5px;        
     }
 
-    .symbol{
-        max-height: 100px;
-        max-width: 100px;
+    .on, .off{
+        position:relative;
+        top: 7px;
     }
+
 
     </style>
+
    </head>
    <body>
 
-   <header>
-    <img src="wikipedia-favicon.png" height="50px">
-    Pictorial Wikipedia
-   </header>
+   <header style="padding-left: 10px;">
+    <h2>wiki</h2><h2 style="font-weight:80; letter-spacing: 1.5px;"><strong>pics</strong></h2> <h2>&nbsp;is</h2>
+
+   <span class="on">
+   <img src="on.gif">
+   </span>
+
+   <span class="off">
+   <img src="off.gif">
+   </span>
 
 
-    <section>
-        <p class="off">
-        You have disabled the plugin. Your Wikipedia pages will display normally until you re-enable it (using the toggle switch).
-        </p>
+   <p style="color: grey;font-size: x-small">
+       Click <img src="on.gif" height="12px"> to toggle plugin on/off
+   </p>
 
-        <p class="on">
-        Your <img class="symbol" src="wikipedia.png"> <img class="symbol" src="pages.png"> will be <img class="symbol" src="visual.png">. 
-        </p>    
-    </section>
+<!--    <p style="color: grey; font-size: xx-small">
+       Contact <a style="color: #558ABB" href="mailto:wikipics.extension@gmail.com">wikipics.extension@gmail.com</a> with feedback. 
+   </p>
+ -->   
+    </header>
 
-
-    <section>
-        <a href="">About</a>
-        <div class="onoffswitch" style="display:inline-block;">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-            <label class="onoffswitch-label" for="myonoffswitch">
-                <span class="onoffswitch-inner"></span>
-                <span class="onoffswitch-switch"></span>
-            </label>
-        </div>
-    </section>
 
    </body>
   </html>

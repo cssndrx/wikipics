@@ -8,6 +8,19 @@ function swap_link_for_image($link, $image){
 	// so that it does not get shown upon hover
 	$link.data('title', $link.attr('title'));
 	$link.removeAttr("title");
+
+	// go in with js and make sure container is big enough
+	if ($image.width() < $image.find('.replacement-label').width()){
+		$image.css('min-width', $image.find('.replacement-label').width() );
+	}
+
+	$image.mouseenter(function(){
+//		debugger;
+		$(this).find('.replacement-label').fadeOut();
+	}).mouseleave(function(){
+		$(this).find('.replacement-label').fadeIn();
+	});
+
 }
 
 
@@ -82,7 +95,7 @@ function get_image($link){
 				img_width = page.thumbnail.width;
 			}
 		}catch(e){
-			console.log(e);
+//			console.log(e);
 			return;
 		}
 
@@ -101,21 +114,19 @@ function get_image($link){
 		//     // resize the image 
 		// });
 
-//		console.log($img.attr('height') + '    ' + $img.attr('width'));
 		var $cont = $('<span style="position:relative; display:inline-block;"></span>');
 		var $label = $('<span class="replacement-label" style="position:absolute; display:block; background-color:rgba(0,0,0,0.8); color:white; white-space:nowrap; word-wrap: break-word;"></span>')
-						.text($link.text())
-						.css('max-width', img_width);
+						.text($link.text());
 		$label.css('top', img_height/2 - 10); //-2
 		$cont.append($label);
 		$cont.append($img);
 		$cont.addClass('replacement-container');
 
-		$cont.mouseenter(function(){
-			$label.fadeOut();
-		}).mouseleave(function(){
-			$label.fadeIn();
-		});
+		// $cont.mouseenter(function(){
+		// 	$label.fadeOut();
+		// }).mouseleave(function(){
+		// 	$label.fadeIn();
+		// });
 		swap_link_for_image($link, $cont);
 
 	});
@@ -196,7 +207,7 @@ y_max = y_min + $(window).height();
 
 
 $( window ).resize(function() {
-  console.log('resizing......');
+//  console.log('resizing......');
   convert_to_pictures();
 });
 
